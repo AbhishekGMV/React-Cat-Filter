@@ -10,20 +10,20 @@ function App() {
 
   const getCatsData = async () => {
     setLoading(true);
-    let res = await axios.get("https://api.thecatapi.com/v1/breeds?limit=10")
+    let res = await axios.get("https://api.thecatapi.com/v1/breeds");
     setData(res.data);
     setLoading(false);
-  }
-  
-  useEffect(() => { 
-    getCatsData()
-  },[])
+  };
+
+  useEffect(() => {
+    getCatsData();
+  }, []);
 
   return (
     <div className="App">
-      <Header data={data}/>
-      <CatsList data={data} loading={loading}/>
-    </div>  
+      <Header data={data} />
+      <CatsList data={data} setData={setData} loading={loading} />
+    </div>
   );
 }
 
