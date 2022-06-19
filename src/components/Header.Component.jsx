@@ -31,17 +31,27 @@ const getAvgWeightAndHeight = (data) => {
   return { weight: avgWeight, age: avgAge };
 };
 
-export default function Header({ data }) {
+export default function Header({ data, loading }) {
   const { weight, age } = getAvgWeightAndHeight(data);
 
   return (
     <div style={headerStyles}>
       <h1 style={titleStyles}>30 days of react</h1>
       <h3>Cats Paradise</h3>
-      <h3>There are {data.length} cats breeds</h3>
-      <p>
-        On an average a cat can weigh about {weight} kg and lives {age} years
-      </p>
+      {(!loading && weight && age) ? 
+      <>
+        <h3>There are <span style={titleStyles}>{data.length}</span> cats breeds</h3>
+        <p>
+          On an average a cat can weigh about 
+          <span style={titleStyles}>{weight}</span>
+          kg and lives 
+          <span style={titleStyles}>{age}</span>
+          years
+        </p>
+      </>
+        :
+        <h1>Loading...</h1>
+      }
     </div>
   );
 }

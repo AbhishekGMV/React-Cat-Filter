@@ -14,45 +14,47 @@ const btnStyle = {
   fontFamily: "Roboto Slab",
 };
 
-export default function Filters({ data, setData }) {
+export default function Filters({ setData, initState }) {
   const [filtersUI, setFiltersUI] = useState([]);
-
   useEffect(() => {
-    const getFilterData = (country) => {
-      const filteredData = data.filter((catData) => catData.origin === country);
+    const applyFilter = (country) => {
+      if(country === "all"){
+        setData(initState);
+        return;
+      }
+      const filteredData = initState.filter((catData) => catData.origin === country);
       setData(filteredData);
     };
 
-    const normalizeData = () => {
-      let normalizedData = {};
+    const formatData = () => {
+      let formattedData = {};
       let countriesCount = {};
-
-      data.forEach(({ origin, id }) => {
+      initState.forEach(({ origin, id }) => {
         countriesCount[origin] = (countriesCount[origin] || 0) + 1;
-        normalizedData = {
-          ...normalizedData,
+        formattedData = {
+          ...formattedData,
           [origin]: { count: countriesCount[origin], key: id },
         };
       });
 
-      normalizedData["all"] = {
-        count: Object.keys(normalizedData).length,
+      formattedData["all"] = {
+        count: Object.keys(formattedData).length,
         key: "all",
       };
-      return normalizedData;
+      return formattedData;
     };
 
-    const normalizedData = normalizeData();
+    const formattedData = formatData();
 
-    const isValidData = Object.keys(normalizedData).length > 0;
-    if (isValidData) {
+    const dataLoaded = Object.keys(formattedData).length > 0;
+    if (dataLoaded) {
       let filtersUI = [];
       let button;
-      for (const country in normalizedData) {
-        let { key, count } = normalizedData[country];
+      for (const country in formattedData) {
+        let { key, count } = formattedData[country];
         button = (
           <div
-            onClick={() => getFilterData(country)}
+            onClick={() => applyFilter(country)}
             style={btnStyle}
             key={key}
           >
@@ -63,7 +65,7 @@ export default function Filters({ data, setData }) {
       }
       setFiltersUI(filtersUI);
     }
-  }, [data, setData]);
+  }, [setData, initState]);
 
   return (
     <div>
