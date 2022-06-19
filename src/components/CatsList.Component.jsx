@@ -11,15 +11,21 @@ const containerStyles = {
   width: "50rem",
 };
 
-const renderData = (data) => {
+const renderCatsList = (data) => {
   return data.map((catData) => <Cat key={catData.id} catData={catData} />);
 };
 
-export default function CatsList({ data, setData, loading }) {
+export default function CatsList({ data, loading, initState, setData }) {
   return (
     <div style={containerStyles}>
-      <Filters data={data} setData={setData} />
-      {loading ? <h1>Loading...</h1> : renderData(data)}
+      {!loading ? 
+      <>
+        <Filters setData={setData} initState={initState}/>
+        {renderCatsList(data)}
+      </>
+      :
+      <h1>Loading...</h1>
+      }
     </div>
   );
 }
